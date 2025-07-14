@@ -12,17 +12,17 @@ export interface IComment extends Document{
 export const CommentSchema: Schema = new Schema({
     catPostId:{
         type: Schema.Types.ObjectId,
-        require: true,
+        required: true,
         ref:'CatPost'
     },
     userId:{
         type: Schema.Types.ObjectId,
-        require: true,
+        required: true,
         ref:'User'
     },
     text:{
         type: String,
-        require: true
+        required: true
     },
     createdAt:{
         type: Date,
