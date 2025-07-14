@@ -53,7 +53,7 @@ export const CatPostSchema: Schema = new Schema({
     },
     location: {
         
-        city: { type: String, required: true },
+        city: { type: String, required: true, index: true },
         province: { type: String, required: true }
     },
     date: {
@@ -69,7 +69,8 @@ export const CatPostSchema: Schema = new Schema({
         type: String,
         enum: ["activo", "resuelto"],
         default: "activo", // Por defecto, la publicación está activa
-        required: true
+        required: true,
+        index:true
     }
 });
 
