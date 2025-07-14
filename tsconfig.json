@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",              // O "es2020" para características más nuevas
+    "module": "commonjs",         // Tipo de módulo a usar (Node.js usa commonjs)
+    "outDir": "./dist",           // Directorio donde se compilará el código JS
+    "rootDir": "./src",           // Directorio donde está tu código fuente TS
+    "strict": true,               // Habilita todas las opciones de verificación de tipos estrictas
+    "esModuleInterop": true,      // Permite importar módulos CommonJS como módulos ES
+    "skipLibCheck": true,         // Evita la verificación de tipos de los archivos de declaración (.d.ts)
+    "forceConsistentCasingInFileNames": true // Asegura que los nombres de archivo sigan un casing consistente
+  }
+}
