@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import { getMongoConnection } from './config/db';
 
 
 
@@ -13,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json()); //Para leer los json
 
+getMongoConnection(); //Conexion con la base de datos
 
 
 app.listen(PORT, ()=>{
