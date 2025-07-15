@@ -4,6 +4,7 @@ import cors from 'cors';
 import { getMongoConnection } from './config/db';
 //import "./models/loadModels";
 import userRoutes from './routes/userRoutes';
+import catPostRoutes from './routes/catPostRoutes';
 
 
 
@@ -20,6 +21,7 @@ getMongoConnection(); //Conexion con la base de datos
 
 //Rutas
 app.use('/api/user',userRoutes); //Rutas de User
+app.use('/api/catPost',catPostRoutes); //Rutas para los post de gatos
 
 
 app.listen(PORT, ()=>{
