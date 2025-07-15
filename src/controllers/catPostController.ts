@@ -119,3 +119,33 @@ export const updateCatPostById = async (req: CustomRequest, res: Response): Prom
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+export const deleteCatPostById = async (req: CustomRequest, res: Response): Promise<Response> => {
+  try {
+    const { id } = req.params;
+    const existingPost = await CatPost.findById(id);
+    
+    if(!existingPost){
+      return res.status(404).json({ status:"error", message: "CatPost not found" });
+    }
+
+    //Si existe el post comprobamos que pertenesca al mismo usuario
+    if(!existingPost.userId || existingPost.userId.toString() !== req.userId!.toString() ){
+      return res.status(403).json({ status:"error" ,message: "Unauthorized: You do not own this post" });
+    }
+
+    //Si exite borramos de la base de datos la foto
+    await cloudinary.uploader.destroy(existingPost.photoId);
+
+    //TODO: Borrar los comentarios asociados al post
+
+    //Borramos el post
+    await existingPost.deleteOne();
+
+    return res.status(200).json({ status:"success", message: "CatPost deleted" });
+
+  } catch (error) {
+    console.error("Error delete post:", error);
+    return res.status(500).json({ status:"error", message: "Server error" });
+  }
+}
