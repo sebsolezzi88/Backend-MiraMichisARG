@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import CatPost from "../models/CatPost";
-import { ObjectId } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { Multer } from "multer";
 import cloudinary from "../config/cloudinary";
 
@@ -143,6 +143,20 @@ export const deleteCatPostById = async (req: CustomRequest, res: Response): Prom
     await existingPost.deleteOne();
 
     return res.status(200).json({ status:"success", message: "CatPost deleted" });
+
+  } catch (error) {
+    console.error("Error delete post:", error);
+    return res.status(500).json({ status:"error", message: "Server error" });
+  }
+}
+
+export const getCatPostsByUser = async (req: CustomRequest, res: Response): Promise<Response> => {
+  try {
+    const { userId } = req.params;
+    
+    const existingPosts = await CatPost.find({ userId});
+    
+    return res.status(200).json({ status:"success", message: "Post Found", post:existingPosts });
 
   } catch (error) {
     console.error("Error delete post:", error);
