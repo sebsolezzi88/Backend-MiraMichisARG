@@ -216,7 +216,7 @@ export const getCatPostById = async (req: CustomRequest, res: Response): Promise
     const existingPost = await CatPost.findById(id);
 
     if(!existingPost){
-      return res.status(404).json({ status:"error", message: "Post not found Posts"});
+      return res.status(404).json({ status:"error", message: "Post not Found"});
     }
     
     return res.status(200).json({ status:"success", message: "Post Found", post:existingPost });
