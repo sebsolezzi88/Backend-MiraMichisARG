@@ -13,8 +13,11 @@ interface DecodedToken extends jwt.JwtPayload {
     id: string;
     username: string;
 }
+interface CustomRequest extends Request {
+    userId?: ObjectId;
+}
 
-export const verifyToken = async (req:Request,res:Response,next:NextFunction) => {
+export const verifyToken = async (req:CustomRequest,res:Response,next:NextFunction) => {
     
      /* Obtener el token de los headers de la solicitud 
         Comúnmente viene en el header 'Authorization' con el prefijo 'Bearer '
