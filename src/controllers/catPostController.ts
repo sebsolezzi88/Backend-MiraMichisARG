@@ -156,7 +156,7 @@ export const getCatPostsByUser = async (req: CustomRequest, res: Response): Prom
     
     const existingPosts = await CatPost.find({ userId});
     
-    return res.status(200).json({ status:"success", message: "Post Found", post:existingPosts });
+    return res.status(200).json({ status:"success", message: "Post Found", posts:existingPosts });
 
   } catch (error) {
     console.error("Error delete post:", error);
