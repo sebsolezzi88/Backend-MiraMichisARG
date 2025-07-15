@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { createCatPost } from "../controllers/catPostController";
+import { verifyToken } from "../middlewares/authMiddleware";
 
 
 const router = Router();
 
-router.post('/',createCatPost);
+router.post('/',verifyToken,createCatPost);
 
 /* 
 router.post('/', createCatPost);               // Crear un nuevo catpost
