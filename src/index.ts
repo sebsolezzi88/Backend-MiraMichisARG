@@ -19,7 +19,7 @@ app.use(express.json()); //Para leer los json
 getMongoConnection(); //Conexion con la base de datos
 
 //Rutas
-app.use('/user',userRoutes); //Rutas de User
+app.use('/api/user',userRoutes); //Rutas de User
 
 
 app.listen(PORT, ()=>{
