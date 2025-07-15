@@ -26,7 +26,7 @@ export const registerUser = async (req:Request,res:Response):Promise<Response> =
         newUser.activationToken = activationToken; //Guardar token en el usuario creado
         await newUser.save();
 
-        const activationUrl = `http://localhost:3000/user/activate?token=${activationToken}`;
+        const activationUrl = `http://localhost:3000/api/user/activate?token=${activationToken}`;
 
         //Mandar mail
         await transporter.sendMail({
