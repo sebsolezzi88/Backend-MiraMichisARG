@@ -7,7 +7,7 @@ import { ObjectId } from 'mongoose';
 
 //obtemos la palabra secreta de las variable de entorno
 dotenv.config();
-const JWT_SECRET = process.env.JWT_SECRET;
+
 
 interface DecodedToken extends jwt.JwtPayload {
     id: string;
@@ -30,7 +30,7 @@ export const verifyToken = async (req:CustomRequest,res:Response,next:NextFuncti
     }
 
     try {
-        const decoded = jwt.verify(token,JWT_SECRET!) as DecodedToken;
+        const decoded = jwt.verify(token,process.env.SECRET_KEY!) as DecodedToken;
         
         //verificar si el usuario esta en la base de datos
         const userExists = await User.findById(decoded.id);
@@ -46,6 +46,7 @@ export const verifyToken = async (req:CustomRequest,res:Response,next:NextFuncti
             return res.status(401).json({ status: 'error', message: 'token expired' });
         }
         if (error instanceof jwt.JsonWebTokenError) {
+            console.log(error);
             return res.status(401).json({ status: 'error', message: 'invalid token' });
         }
         return res.status(500).json({status:'error', message:'internal server error',error});
