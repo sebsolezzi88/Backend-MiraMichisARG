@@ -7,6 +7,7 @@
     "strict": true,               // Habilita todas las opciones de verificación de tipos estrictas
     "esModuleInterop": true,      // Permite importar módulos CommonJS como módulos ES
     "skipLibCheck": true,         // Evita la verificación de tipos de los archivos de declaración (.d.ts)
-    "forceConsistentCasingInFileNames": true // Asegura que los nombres de archivo sigan un casing consistente
+    "forceConsistentCasingInFileNames": true, // Asegura que los nombres de archivo sigan un casing consistente
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   }
 }

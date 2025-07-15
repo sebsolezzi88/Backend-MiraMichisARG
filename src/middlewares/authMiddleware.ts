@@ -2,6 +2,7 @@ import {Request,Response,NextFunction} from 'express';
 import dotenv from 'dotenv';
 import  jwt  from 'jsonwebtoken';
 import User from '../models/User';
+import { ObjectId } from 'mongoose';
 
 
 //obtemos la palabra secreta de las variable de entorno
@@ -33,7 +34,8 @@ export const verifyToken = async (req:Request,res:Response,next:NextFunction) =>
         if(!userExists){
             return res.status(403).json({ status: 'error', message: 'invalid user' });
         }
-       
+        
+        req.userId = userExists._id as ObjectId;
         next() //Continua la consulta 
         
     } catch (error:unknown) {
