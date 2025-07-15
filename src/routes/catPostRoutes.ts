@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { createCatPost } from "../controllers/catPostController";
 import { verifyToken } from "../middlewares/authMiddleware";
+import { upload } from "../config/cloudinary";
 
 
 const router = Router();
 
-router.post('/',verifyToken,createCatPost);
+router.post('/',verifyToken,upload.single('photo'),createCatPost);
 
 /* 
 router.post('/', createCatPost);               // Crear un nuevo catpost
