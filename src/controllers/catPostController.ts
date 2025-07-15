@@ -9,6 +9,10 @@ interface CustomRequest extends Request {
     file?: Express.Multer.File;
 }
 
+interface CloudinaryFile extends Express.Multer.File {
+  public_id?: string; 
+}
+
 export const createCatPost = async (req:CustomRequest,res:Response):Promise<Response> =>{
 
     try {
@@ -23,15 +27,18 @@ export const createCatPost = async (req:CustomRequest,res:Response):Promise<Resp
       city,
       province,
     } = req.body;
+
    
     // Archivo subido
-    const file = req.file;
+    const file = req.file as CloudinaryFile;
+
 
     if (!file) {
       return res.status(400).json({ message: 'Image is required' });
     }
 
     const photoUrl = file.path; // URL generada por Cloudinary
+    const photoId = file.filename;
 
     // Guardar en MongoDB
     const newPost = await CatPost.create({
@@ -44,11 +51,13 @@ export const createCatPost = async (req:CustomRequest,res:Response):Promise<Resp
       breed,
       location: { city, province },
       photoUrl,
+      photoId
     });
 
     
       return res.status(201).json({ message: 'CatPost created', post: newPost });
     } catch (error) {
+      console.error("Create error:", error);
         return res.status(500).json({ message: 'Server error' });
     }
 }
@@ -73,17 +82,21 @@ export const updateCatPostById = async (req: CustomRequest, res: Response): Prom
     if (!existingPost) {
       return res.status(404).json({ message: "CatPost not found" });
     }
+     // Verificar que el post le pertenece al usuario logueado
+    if (!existingPost.userId || existingPost.userId.toString() !== req.userId!.toString()) {
+      return res.status(403).json({ message: "Unauthorized: You do not own this post" });
+    }
 
     // Si hay nueva imagen
     if (req.file) {
       // Borrar la imagen anterior en Cloudinary
-      if (existingPost.photoUrl) {
-        await cloudinary.uploader.destroy(existingPost.photoUrl);
+      if (existingPost.photoId) {
+        await cloudinary.uploader.destroy(existingPost.photoId);
       }
 
       // Obtener datos de la nueva imagen
       const photoUrl = req.file.path;
-      const photoId = (req.file as any).filename; // Esto depende del storage
+      const photoId = req.file.filename; 
 
       existingPost.photoUrl = photoUrl;
       existingPost.photoId = photoId;
