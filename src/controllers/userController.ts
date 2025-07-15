@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import jwt from 'jsonwebtoken';
 import dotenv  from 'dotenv';
+import bcrypt from 'bcrypt';
 import User from "../models/User";
 import { transporter } from "../config/mail";
+
 
 dotenv.config(); //Cargar variables de entorno
 
@@ -15,6 +17,10 @@ export const registerUser = async (req:Request,res:Response):Promise<Response> =
         if(!errors.isEmpty()){
             return res.status(400).json({errors:errors.array()}); //Si hay errores los enviamos
         }
+
+        //Hasheamos la contraseña que nos mandan en el req.body
+        req.body.password = await bcrypt.hash(req.body.password,10);
+
         //Registrarmos al usuario.
         const newUser = await User.create(req.body);
 
