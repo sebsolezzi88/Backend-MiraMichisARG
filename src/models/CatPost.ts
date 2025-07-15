@@ -16,6 +16,7 @@ export interface ICatPost extends Document {
     location :Location;
     date: Date;
     photoUrl: string;
+    photoId: string;
     publicationStatus: PublicationStatus
 }
 
@@ -62,6 +63,10 @@ export const CatPostSchema: Schema = new Schema({
         required: true
     },
     photoUrl: {
+        type: String,
+        required: true
+    },
+     photoId: {
         type: String,
         required: true
     },

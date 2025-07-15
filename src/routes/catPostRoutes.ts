@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCatPost } from "../controllers/catPostController";
+import { createCatPost, updateCatPostById } from "../controllers/catPostController";
 import { verifyToken } from "../middlewares/authMiddleware";
 import { upload } from "../config/cloudinary";
 
