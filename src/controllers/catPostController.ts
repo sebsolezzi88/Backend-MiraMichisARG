@@ -22,6 +22,8 @@ export const createCatPost = async (req:CustomRequest,res:Response):Promise<Resp
       city,
       province,
     } = req.body;
+    console.log('req.body:', req.body);
+    console.log('req.file:', req.file);
 
     // Archivo subido
     const file = req.file;
@@ -34,7 +36,7 @@ export const createCatPost = async (req:CustomRequest,res:Response):Promise<Resp
 
     // Guardar en MongoDB
     const newPost = await CatPost.create({
-      userId: req.userId, // suponiendo que tenés el user inyectado por middleware
+      userId: req.userId, // user inyectado por middleware
       typeOfPublication,
       gender,
       catName,
