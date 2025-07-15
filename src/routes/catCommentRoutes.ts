@@ -1,15 +1,14 @@
 import { Router } from "express";
+import { verifyToken } from "../middlewares/authMiddleware";
 
 
 const router = Router();
 
-/* 
-    Rutas a crear
-    router.post('/:idCatPost',verifyToken,addComment); //El usuario creara comentarios
-    router.delete('/:idCatPost/comment/:idComment',verifyToken,deleteComment); //El usuario podrá borrar su comentario
-    router.get(/:idCatPost,getPostComment); // obtener los comentarios de un post
-    router.put('/:idCatPost/comment/:idComment',verifyToken,updateComment);  //Actualiza comentario
-*/
+router.get('/:catPostId/comments', getPostComments); // Obtener todos los comentarios de un post
+router.post('/:catPostId/comments', verifyToken, addComment); // Crear comentario
+router.delete('/:catPostId/comments/:commentId', verifyToken, deleteComment); // Eliminar un comentario
+router.put('/:catPostId/comments/:commentId', verifyToken, updateComment); // Editar un comentario
+
 
 
 export default router;
