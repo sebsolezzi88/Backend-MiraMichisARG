@@ -21,7 +21,7 @@ getMongoConnection(); //Conexion con la base de datos
 
 //Rutas
 app.use('/api/user',userRoutes); //Rutas de User
-app.use('/api/catPost',catPostRoutes); //Rutas para los post de gatos
+app.use('/api/catpost',catPostRoutes); //Rutas para los post de gatos
 
 
 app.listen(PORT, ()=>{
