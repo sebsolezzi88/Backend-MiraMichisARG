@@ -32,6 +32,6 @@ export const validateUserRegister = [
   body('location.city')
     .notEmpty().withMessage('City is required'),
 
-  body('location.country')
-    .notEmpty().withMessage('Country is required'),
+  body('location.province')
+    .notEmpty().withMessage('Province is required'),
 ];

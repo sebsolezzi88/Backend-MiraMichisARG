@@ -32,7 +32,7 @@ const UserSchema = new Schema<IUser>({
     avatarUrl: { type: String },
     location: {
         city: { type: String, required: true },
-        country: { type: String, required: true },
+        province: { type: String, required: true },
     },
     role: { type: String, enum: ["admin", "user"], default: "user" },
     isActive: { type: Boolean, default: false },
