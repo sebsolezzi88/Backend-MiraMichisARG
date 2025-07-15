@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
+import User from "../models/User";
 
 
 export const registerUser = async (req:Request,res:Response):Promise<Response> =>{
@@ -9,7 +10,9 @@ export const registerUser = async (req:Request,res:Response):Promise<Response> =
         if(!errors.isEmpty()){
             return res.status(400).json({errors:errors.array()}); //Si hay errores los enviamos
         }
-        return res.status(200).json({status:'success', message: "Listo."});
+        //Registrarmos al usuario.
+        await User.create(req.body);
+        return res.status(200).json({status:'success', message: "User created."});
     } catch (error) {
         return res.status(500).json({status:'error', message: "Server Error."});
     }

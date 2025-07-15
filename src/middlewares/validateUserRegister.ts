@@ -1,9 +1,17 @@
 import {body} from 'express-validator';
+import User from '../models/User';
 
 export const validateUserRegister = [
   body('username')
     .notEmpty().withMessage('Username is required')
-    .isLength({ min: 6 }).withMessage('Username must have at least 6 characters'),
+    .isLength({ min: 6 }).withMessage('Username must have at least 6 characters')
+    .custom(async (value) => {
+      const existingUser = await User.findOne({ username: value });
+      if (existingUser) {
+        throw new Error('Username already in use');
+      }
+      return true;
+    }),
 
   body('name')
     .notEmpty().withMessage('Name is required'),
