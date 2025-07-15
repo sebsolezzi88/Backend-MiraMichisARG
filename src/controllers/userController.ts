@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
+import jwt from 'jsonwebtoken';
+import dotenv  from 'dotenv';
 import User from "../models/User";
 import { transporter } from "../config/mail";
+
+dotenv.config(); //Cargar variables de entorno
 
 
 export const registerUser = async (req:Request,res:Response):Promise<Response> =>{
@@ -12,7 +16,17 @@ export const registerUser = async (req:Request,res:Response):Promise<Response> =
             return res.status(400).json({errors:errors.array()}); //Si hay errores los enviamos
         }
         //Registrarmos al usuario.
-        const newUser =await User.create(req.body);
+        const newUser = await User.create(req.body);
+
+        //Generar Token Para activar su cuenta
+        const activationToken = jwt.sign({ id: newUser._id },
+            process.env.SECRET_KEY!,
+            { expiresIn: '1d' }
+        );
+        newUser.activationToken = activationToken; //Guardar token en el usuario creado
+        await newUser.save();
+
+        const activationUrl = `http://localhost:3000/user/activate?token=${activationToken}`;
 
         //Mandar mail
         await transporter.sendMail({
@@ -20,9 +34,9 @@ export const registerUser = async (req:Request,res:Response):Promise<Response> =
         to: newUser.email,
         subject: "Activa tu cuenta",
         html: `<p>Hola ${newUser.name}, activa tu cuenta dando clic en el siguiente enlace:</p>
-                <a href="http://localhost:3000/activar/">Activar cuenta</a>`
+                <a href="${activationUrl}">Activar cuenta</a>`
         });
-        return res.status(200).json({status:'success', message: "User created. We send a email confirmation"});
+        return res.status(200).json({status:'success', message: "User created. We send a confirmation email "});
     } catch (error) {
         return res.status(500).json({status:'error', message: "Server Error."});
     }
