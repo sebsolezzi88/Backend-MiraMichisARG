@@ -18,7 +18,7 @@ export const getPostComments = async (req: CustomRequest, res: Response): Promis
       return res.status(404).json({ status:"error", message: "Post not Found"});
     }
     //Encontrar los comentarios del post
-    const existingComments = await Comment.find({catPostId}).populate('userId','username');
+    const existingComments = await Comment.find({catPostId}).populate('userId','username avatarUrl');
         
     return res.status(200).json({ status:"success", message: "ok", post: existingPost,comments: existingComments});
 
