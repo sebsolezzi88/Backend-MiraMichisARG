@@ -6,6 +6,7 @@ import { getMongoConnection } from './config/db';
 import userRoutes from './routes/userRoutes';
 import catPostRoutes from './routes/catPostRoutes';
 import catCommentRoutes from './routes/catCommentRoutes';
+import messageRoutes from './routes/messageRoutes';
 
 
 
@@ -24,6 +25,7 @@ getMongoConnection(); //Conexion con la base de datos
 app.use('/api/user',userRoutes); //Rutas de User
 app.use('/api/catpost',catPostRoutes); //Rutas para los post de gatos
 app.use('/api/catpost',catCommentRoutes); //Rutas para los comentarios  de post de gatos
+app.use('/api/message',messageRoutes); //Rutas para el envio y recepción de mensajes
 
 
 
