@@ -42,3 +42,22 @@ export const sendMessage = async (req: CustomRequest, res: Response): Promise<Re
         return res.status(500).json({ status:"error", message: "Server error" });
     }
 }
+
+export const getMessageReceived = async (req: CustomRequest, res: Response): Promise<Response> => {
+    try {
+        
+        //Obtener los mensajes recibidos
+        const receivedMessages = Message.find({toUserId:req.userId})
+                                .sort({ createdAt: -1 })
+                                .populate('fromUserId', 'username avatarUrl'); 
+
+        return res.status(200).json({ 
+            status:"success", 
+            message: "Message send",
+            receivedMessages
+        });
+    } catch (error) {
+        console.error("Error send Message:", error);
+        return res.status(500).json({ status:"error", message: "Server error" });
+    }
+}
