@@ -93,8 +93,13 @@ export const markMessageRead = async (req: CustomRequest, res: Response): Promis
         //Verificar si existe el mensaje
         const existMessage = await Message.findById(idMessage);
 
+        //Verificar si el usuario logueado es el que recibió el mensaje
+
         if(!existMessage){
             return res.status(400).json({ status:"error", message: "Message not found"});
+        }
+        if(existMessage.toUserId.toString() !== req.userId!.toString()){
+            return res.status(403).json({ status:"error" ,message: "Unauthorized" });
         }
 
         if(existMessage.read){
