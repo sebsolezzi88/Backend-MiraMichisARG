@@ -20,7 +20,7 @@ export const sendMessage = async (req: CustomRequest, res: Response): Promise<Re
         }
 
         //Comprobar si el receptor existe
-        const existUser = User.findById(toUserId);
+        const existUser = await User.findById(toUserId);
         if(!existUser){
             return res.status(404).json({ status:"error", message: "User not found"});
         }
@@ -47,7 +47,7 @@ export const getMessageReceived = async (req: CustomRequest, res: Response): Pro
     try {
         
         //Obtener los mensajes recibidos
-        const receivedMessages = Message.find({toUserId:req.userId})
+        const receivedMessages =  await Message.find({toUserId:req.userId})
                                 .sort({ createdAt: -1 })
                                 .populate('fromUserId', 'username avatarUrl'); 
 
@@ -66,7 +66,7 @@ export const getMessageSended = async (req: CustomRequest, res: Response): Promi
     try {
         
         //Obtener los mensajes enviados
-        const receivedMessages = Message.find({fromUserId:req.userId})
+        const receivedMessages = await Message.find({fromUserId:req.userId})
                                 .sort({ createdAt: -1 })
                                 .populate('fromUserId', 'username avatarUrl'); 
 
@@ -74,6 +74,39 @@ export const getMessageSended = async (req: CustomRequest, res: Response): Promi
             status:"success", 
             message: "Message send",
             receivedMessages
+        });
+    } catch (error) {
+        console.error("Error send Message:", error);
+        return res.status(500).json({ status:"error", message: "Server error" });
+    }
+}
+
+export const markMessageRead = async (req: CustomRequest, res: Response): Promise<Response> => {
+    try {
+        
+        const {id} = req.body;
+
+        if(!id || !isValidObjectId(id)){
+            return res.status(400).json({ status:"error", message: "Invalid ID"});
+        }
+
+        //Verificar si existe el mensaje
+        const existMessage = await Message.findById(id);
+
+        if(!existMessage){
+            return res.status(400).json({ status:"error", message: "Message not found"});
+        }
+
+        if(existMessage.read){
+            return res.status(400).json({ status:"error", message: "You have already marked this as read"});
+        }else{
+            existMessage.read = true;
+            await existMessage.save();
+        }
+
+        return res.status(200).json({ 
+            status:"success", 
+            message: "Message send"
         });
     } catch (error) {
         console.error("Error send Message:", error);
