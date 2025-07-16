@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { verifyToken } from "../middlewares/authMiddleware";
+import { addComment, deleteComment, getPostComments, updateComment } from "../controllers/catCommentController";
+
 
 
 const router = Router();
