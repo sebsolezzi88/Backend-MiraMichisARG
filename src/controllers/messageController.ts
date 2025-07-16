@@ -84,14 +84,14 @@ export const getMessageSended = async (req: CustomRequest, res: Response): Promi
 export const markMessageRead = async (req: CustomRequest, res: Response): Promise<Response> => {
     try {
         
-        const {id} = req.body;
+        const {idMessage} = req.params;
 
-        if(!id || !isValidObjectId(id)){
+        if(!idMessage || !isValidObjectId(idMessage)){
             return res.status(400).json({ status:"error", message: "Invalid ID"});
         }
 
         //Verificar si existe el mensaje
-        const existMessage = await Message.findById(id);
+        const existMessage = await Message.findById(idMessage);
 
         if(!existMessage){
             return res.status(400).json({ status:"error", message: "Message not found"});
