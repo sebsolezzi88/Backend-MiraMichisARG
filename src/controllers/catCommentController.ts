@@ -1,5 +1,5 @@
 import { Response,Request } from "express";
-import { ObjectId } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 import CatPost from "../models/CatPost";
 import Comment from "../models/Commet";
 
@@ -69,10 +69,26 @@ export const updateComment = async (req: CustomRequest, res: Response): Promise<
 
 export const deleteComment = async (req: CustomRequest, res: Response): Promise<Response> => {
   try {
+    const commentId = req.params.commentId; //id del comentario a borrar
+    const userId = req.userId; //id del usuario que comenta
+
+    // Validación básica del ObjectId
+    if (!Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ status: "error",message: "Invalid Id" });
+    }
     
+    const existingComment = await Comment.findById(commentId);
+    if(!existingComment){
+      return res.status(404).json({ status:"error", message: "Post not Found"});
+    }
+
+    if( existingComment.userId.toString() !== userId!.toString()){
+      return res.status(403).json({ status:"error" ,message: "Unauthorized" });
+    }
+
+    await existingComment.deleteOne();
     
-    
-    return res.status(200).json({ status:"success", message: "ok"});
+    return res.status(200).json({ status:"success", message: "Comment Deleted"});
 
   } catch (error) {
     console.error("Error delete post:", error);
