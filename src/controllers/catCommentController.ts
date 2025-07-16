@@ -59,7 +59,7 @@ export const updateComment = async (req: CustomRequest, res: Response): Promise<
   try {
     const commentId = req.params.commentId; //id del comentario a borrar
     const userId = req.userId; //id del usuario que comenta
-    const text = req.body; //Texto a editar
+    const {text} = req.body; //Texto a editar
 
     // Validación básica del ObjectId
     if (!Types.ObjectId.isValid(commentId)) {
