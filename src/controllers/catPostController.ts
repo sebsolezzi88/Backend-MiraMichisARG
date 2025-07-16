@@ -3,6 +3,7 @@ import CatPost from "../models/CatPost";
 import mongoose, { ObjectId } from "mongoose";
 import { Multer } from "multer";
 import cloudinary from "../config/cloudinary";
+import Comment from "../models/Commet";
 
 interface CustomRequest extends Request {
     userId?: ObjectId;
@@ -137,7 +138,8 @@ export const deleteCatPostById = async (req: CustomRequest, res: Response): Prom
     //Si exite borramos de la base de datos la foto
     await cloudinary.uploader.destroy(existingPost.photoId);
 
-    //TODO: Borrar los comentarios asociados al post
+    //Borra todos los comentarios relacionados al post
+    await Comment.deleteMany({ catPostId: id });
 
     //Borramos el post
     await existingPost.deleteOne();
