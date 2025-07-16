@@ -55,17 +55,37 @@ export const addComment = async (req: CustomRequest, res: Response): Promise<Res
 }
 
 export const updateComment = async (req: CustomRequest, res: Response): Promise<Response> => {
+ 
   try {
+    const commentId = req.params.commentId; //id del comentario a borrar
+    const userId = req.userId; //id del usuario que comenta
+    const text = req.body; //Texto a editar
+
+    // Validación básica del ObjectId
+    if (!Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ status: "error",message: "Invalid Id" });
+    }
     
+    const existingComment = await Comment.findById(commentId);
+    if(!existingComment){
+      return res.status(404).json({ status:"error", message: "Post not Found"});
+    }
+
+    if( existingComment.userId.toString() !== userId!.toString()){
+      return res.status(403).json({ status:"error" ,message: "Unauthorized" });
+    }
+
+    existingComment.text = text
+    await existingComment.save();
     
-    
-    return res.status(200).json({ status:"success", message: "ok"});
+    return res.status(200).json({ status:"success", message: "Comment Updated"});
 
   } catch (error) {
     console.error("Error delete post:", error);
     return res.status(500).json({ status:"error", message: "Server error" });
   }
 }
+
 
 export const deleteComment = async (req: CustomRequest, res: Response): Promise<Response> => {
   try {
