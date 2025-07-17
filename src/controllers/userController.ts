@@ -129,7 +129,7 @@ export const loginUser = async (req:Request,res:Response):Promise<Response> =>{
     }
 }
 
-export const updateProfile = async (req:Request,res:Response):Promise<Response> =>{
+export const updateProfile = async (req:CustomRequest,res:Response):Promise<Response> =>{
     
     try {
       const { name, lastmane, bio, city, province  } = req.body;
