@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import User from "../models/User";
 import { transporter } from "../config/mail";
 import { ObjectId } from "mongoose";
+import cloudinary from "../config/cloudinary";
 
 
 dotenv.config(); //Cargar variables de entorno
@@ -132,21 +133,52 @@ export const loginUser = async (req:Request,res:Response):Promise<Response> =>{
 export const updateProfile = async (req:CustomRequest,res:Response):Promise<Response> =>{
     
     try {
-      const { name, lastmane, bio, city, province  } = req.body;
+      const { name, lastName, bio, city, province  } = req.body;
       
       const file = req.file as CloudinaryFile; // Archivo subido
-      const photoUrl = file.path; // URL generada por Cloudinary
-      const photoId = file.filename; //id del archivo subido
-      
+
+      if (!name?.trim() || !lastName?.trim() || !city?.trim() || !province?.trim()) {
+            if (req.file) {
+                cloudinary.uploader.destroy(req.file.filename); // Elimina la imagen
+            }
+            return res.status(400).json({ message: 'name, lastName, city and province are requeried' });
+      }
+
       const user = await User.findById(req.userId);
 
-        //El usuario no esta registrado
-        if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
+      //El usuario no esta registrado
+      if (!user) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
 
-        return res.status(200).json({ message: 'Update successful' });
+      if (req.file) {
+        // Borrar la imagen anterior en Cloudinary
+        if (user.avatarId) {
+          await cloudinary.uploader.destroy(user.avatarId);
+        }
+      
+        // Obtener datos de la nueva imagen
+        const photoUrl = file.path; // URL generada por Cloudinary
+        const photoId = file.filename; //id del archivo subido
+
+        user.avatarUrl = photoUrl;
+        user.avatarId= photoId;
+      }
+        
+      //Actualizamos los datos en el usuario
+      user.name = name;
+      user.lastName = lastName;
+      user.bio = bio;
+      user.location.city = city;
+      user.location.province= province;
+        
+
+      //Guardamos los cambios
+      await user.save();
+
+      return res.status(200).json({ status:'success', message: 'Update successful' });
     } catch (error) {
-        return res.status(500).json({ message: 'Server error' });
+        console.log(error);
+        return res.status(500).json({status:'error', message: 'Server error' });
     }
 }

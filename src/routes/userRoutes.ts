@@ -12,6 +12,6 @@ const router = Router();
 router.post('/register',validateUserRegister ,registerUser);
 router.get('/activate',activateAccount);
 router.post('/login',validateUserLogin ,loginUser);
-router.put('/profile',verifyToken,validateProfileUpdate,validateRequest,upload.single('photo'),updateProfile);
+router.put('/profile',verifyToken,upload.single('photo'),updateProfile);
 
 export default router;
