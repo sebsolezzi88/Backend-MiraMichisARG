@@ -1,9 +1,9 @@
 import { Response } from "express";
 import { ObjectId } from "mongoose";
+import { Rol } from "../models/User";
 
 interface CustomRequest extends Request {
     userId?: ObjectId;
-    
 }
 
 export const crearBlogPost = async (req: CustomRequest, res: Response): Promise<Response> => {

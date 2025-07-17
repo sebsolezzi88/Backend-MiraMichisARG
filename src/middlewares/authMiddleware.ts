@@ -1,7 +1,7 @@
 import {Request,Response,NextFunction} from 'express';
 import dotenv from 'dotenv';
 import  jwt  from 'jsonwebtoken';
-import User from '../models/User';
+import User, { Rol } from '../models/User';
 import { ObjectId } from 'mongoose';
 
 
@@ -15,6 +15,7 @@ interface DecodedToken extends jwt.JwtPayload {
 }
 interface CustomRequest extends Request {
     userId?: ObjectId;
+    userRol: Rol;
 }
 
 export const verifyToken = async (req:CustomRequest,res:Response,next:NextFunction) => {
@@ -39,6 +40,7 @@ export const verifyToken = async (req:CustomRequest,res:Response,next:NextFuncti
         }
         
         req.userId = userExists._id as ObjectId;
+        req.userRol = userExists.role;
         next() //Continua la consulta 
         
     } catch (error:unknown) {
