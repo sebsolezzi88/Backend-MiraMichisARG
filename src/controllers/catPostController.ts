@@ -38,8 +38,8 @@ export const createCatPost = async (req:CustomRequest,res:Response):Promise<Resp
       return res.status(400).json({ message: 'Image is required' });
     }
 
-    const photoUrl = file.path; // URL generada por Cloudinary
-    const photoId = file.filename;
+    const avatarUrl = file.path; // URL generada por Cloudinary
+    const avatarId = file.filename;
 
     // Guardar en MongoDB
     const newPost = await CatPost.create({

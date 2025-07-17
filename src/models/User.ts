@@ -15,6 +15,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   avatarUrl?: string;
+  avatarId?: string;
   location: Location;
   role: Rol;
   isActive: boolean;             // Se activa tras validar el email
@@ -30,6 +31,7 @@ const UserSchema = new Schema<IUser>({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     avatarUrl: { type: String },
+    avatarId: { type: String },
     location: {
         city: { type: String, required: true },
         province: { type: String, required: true },
