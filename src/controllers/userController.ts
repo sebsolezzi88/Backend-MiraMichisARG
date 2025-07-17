@@ -5,10 +5,18 @@ import dotenv  from 'dotenv';
 import bcrypt from 'bcrypt';
 import User from "../models/User";
 import { transporter } from "../config/mail";
+import { ObjectId } from "mongoose";
 
 
 dotenv.config(); //Cargar variables de entorno
+interface CustomRequest extends Request {
+    userId?: ObjectId;
+    file?: Express.Multer.File;
+}
 
+interface CloudinaryFile extends Express.Multer.File {
+  public_id?: string; 
+}
 
 export const registerUser = async (req:Request,res:Response):Promise<Response> =>{
     try {
@@ -122,16 +130,15 @@ export const loginUser = async (req:Request,res:Response):Promise<Response> =>{
 }
 
 export const updateProfile = async (req:Request,res:Response):Promise<Response> =>{
-    const errors = validationResult(req);
     
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { username, password } = req.body;
-
     try {
-        const user = await User.findOne({ username });
+      const { name, lastmane, bio, city, province  } = req.body;
+      
+      const file = req.file as CloudinaryFile; // Archivo subido
+      const photoUrl = file.path; // URL generada por Cloudinary
+      const photoId = file.filename; //id del archivo subido
+      
+      const user = await User.findById(req.userId);
 
         //El usuario no esta registrado
         if (!user) {

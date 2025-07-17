@@ -5,12 +5,13 @@ import { validateUserLogin } from "../middlewares/validateUserLogin";
 import { upload } from "../config/cloudinary";
 import { verifyToken } from "../middlewares/authMiddleware";
 import { validateProfileUpdate } from "../middlewares/validateProfileUpdate";
+import { validateRequest } from "../middlewares/validationRequest";
 
 const router = Router();
 
 router.post('/register',validateUserRegister ,registerUser);
 router.get('/activate',activateAccount);
 router.post('/login',validateUserLogin ,loginUser);
-router.put('/profile',verifyToken,validateProfileUpdate,upload.single('photo'),updateProfile);
+router.put('/profile',verifyToken,validateProfileUpdate,validateRequest,upload.single('photo'),updateProfile);
 
 export default router;
